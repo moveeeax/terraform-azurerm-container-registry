@@ -9,7 +9,7 @@ server and admin credentials for CI pipelines.
 
 ```hcl
 module "container_registry" {
-  source = "github.com/cybercapybara/terraform-azurerm-container-registry"
+  source = "github.com/moveeeax/terraform-azurerm-container-registry"
 
   name                = "prodacr01"
   resource_group_name = "prod-rg"

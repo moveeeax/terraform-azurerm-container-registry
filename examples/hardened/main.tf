@@ -20,8 +20,6 @@ provider "azurerm" {
   features {}
 }
 
-# ACR names are globally unique and allow alphanumerics only, so the example
-# generates its own suffix rather than shipping a name that is already taken.
 resource "random_string" "suffix" {
   length  = 8
   lower   = true
@@ -31,29 +29,35 @@ resource "random_string" "suffix" {
 }
 
 resource "azurerm_resource_group" "example" {
-  name     = "example-acr-rg"
+  name     = "example-acr-hardened-rg"
   location = "eastus"
 }
 
+# A Premium registry with the network and policy controls turned on. Every
+# setting below is Premium-gated; the module refuses them at plan time on a
+# Basic or Standard registry rather than failing halfway through an apply.
 module "container_registry" {
   source = "../.."
 
-  name                = "exampleacr${random_string.suffix.result}"
+  name                = "hardenedacr${random_string.suffix.result}"
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_resource_group.example.location
-  sku                 = "Standard"
+  sku                 = "Premium"
 
-  # Defaults already keep the shared admin credential and anonymous pull off;
-  # they are restated here so the example documents the intended posture.
-  admin_enabled          = false
-  anonymous_pull_enabled = false
+  admin_enabled                 = false
+  anonymous_pull_enabled        = false
+  public_network_access_enabled = false
+  export_policy_enabled         = false
+  quarantine_policy_enabled     = true
+  trust_policy_enabled          = true
+  retention_policy_in_days      = 30
 
   tags = {
-    Environment = "sandbox"
+    Environment = "production"
     ManagedBy   = "terraform"
   }
 }
 
-output "acr_login_server" {
-  value = module.container_registry.login_server
+output "acr_id" {
+  value = module.container_registry.id
 }

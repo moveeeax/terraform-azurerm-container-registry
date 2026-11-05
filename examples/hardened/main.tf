@@ -4,7 +4,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 4.0, < 5.0"
+      version = ">= 4.0, < 6.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -49,7 +49,6 @@ module "container_registry" {
   public_network_access_enabled = false
   export_policy_enabled         = false
   quarantine_policy_enabled     = true
-  trust_policy_enabled          = true
   retention_policy_in_days      = 30
 
   tags = {

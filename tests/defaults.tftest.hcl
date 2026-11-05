@@ -29,11 +29,6 @@ run "defaults_are_safe" {
   }
 
   assert {
-    condition     = azurerm_container_registry.this.trust_policy_enabled == false
-    error_message = "trust_policy_enabled must default to false so the default Standard SKU stays valid."
-  }
-
-  assert {
     condition     = azurerm_container_registry.this.retention_policy_in_days == null
     error_message = "retention_policy_in_days must default to null so the default Standard SKU stays valid."
   }
@@ -108,17 +103,6 @@ run "quarantine_policy_requires_premium" {
   expect_failures = [azurerm_container_registry.this]
 }
 
-run "trust_policy_requires_premium" {
-  command = plan
-
-  variables {
-    sku                  = "Standard"
-    trust_policy_enabled = true
-  }
-
-  expect_failures = [azurerm_container_registry.this]
-}
-
 run "retention_policy_requires_premium" {
   command = plan
 
@@ -152,7 +136,6 @@ run "hardened_premium_configuration_is_accepted" {
     public_network_access_enabled = false
     export_policy_enabled         = false
     quarantine_policy_enabled     = true
-    trust_policy_enabled          = true
     retention_policy_in_days      = 30
   }
 

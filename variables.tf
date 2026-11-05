@@ -59,12 +59,6 @@ variable "quarantine_policy_enabled" {
   default     = false
 }
 
-variable "trust_policy_enabled" {
-  description = "Whether content trust (signed image verification) is enforced. Requires the Premium SKU."
-  type        = bool
-  default     = false
-}
-
 variable "retention_policy_in_days" {
   description = "Number of days untagged manifests are kept before being purged. Null leaves the retention policy disabled. Requires the Premium SKU."
   type        = number

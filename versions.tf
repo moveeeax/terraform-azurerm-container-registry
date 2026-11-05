@@ -4,11 +4,11 @@ terraform {
   required_providers {
     azurerm = {
       source = "hashicorp/azurerm"
-      # Floor: trust_policy_enabled and retention_policy_in_days only exist from
-      # 4.0.0 onwards. The final 3.x release (3.117.1) still uses the removed
-      # trust_policy / retention_policy blocks and rejects both arguments.
-      # Ceiling: 5.0 has not shipped, so its schema cannot be relied on.
-      version = ">= 4.0, < 5.0"
+      # Floor: retention_policy_in_days only exists from 4.0.0 onwards. The final
+      # 3.x release (3.117.1) still uses the removed retention_policy block.
+      # trust_policy_enabled is not used: azurerm 5.0 removed it.
+      # Ceiling: tested against 5.x; 6.0 has not been vetted.
+      version = ">= 4.0, < 6.0"
     }
   }
 }
